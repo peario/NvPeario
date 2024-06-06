@@ -2,33 +2,29 @@
 local M = {}
 
 -- For setting keymaps
-local map = vim.keymap.set
+local map = require("libs.keybinds")
 
 -- export on_attach & capabilities
 M.on_attach = function(client, bufnr)
-  local function opts(desc)
-    return { buffer = bufnr, desc = "LSP " .. desc }
-  end
+  map.set("n", "gD", vim.lsp.buf.declaration, "Go to declaration", { buffer = bufnr })
+  map.set("n", "gd", vim.lsp.buf.definition, "Go to definition", { buffer = bufnr })
+  map.set("n", "gi", vim.lsp.buf.implementation, "Go to implementation", { buffer = bufnr })
+  map.set("n", "<leader>sh", vim.lsp.buf.signature_help, "Show signature help", { buffer = bufnr })
+  map.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, "Add workspace folder", { buffer = bufnr })
+  map.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, "Remove workspace folder", { buffer = bufnr })
 
-  map("n", "gD", vim.lsp.buf.declaration, opts("Go to declaration"))
-  map("n", "gd", vim.lsp.buf.definition, opts("Go to definition"))
-  map("n", "gi", vim.lsp.buf.implementation, opts("Go to implementation"))
-  map("n", "<leader>sh", vim.lsp.buf.signature_help, opts("Show signature help"))
-  map("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, opts("Add workspace folder"))
-  map("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, opts("Remove workspace folder"))
-
-  map("n", "<leader>wl", function()
+  map.set("n", "<leader>wl", function()
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, opts("List workspace folders"))
+  end, "List workspace folders", { buffer = bufnr })
 
-  map("n", "<leader>D", vim.lsp.buf.type_definition, opts("Go to type definition"))
+  map.set("n", "<leader>D", vim.lsp.buf.type_definition, "Go to type definition", { buffer = bufnr })
 
-  map("n", "<leader>ra", function()
+  map.set("n", "<leader>ra", function()
     require("libs.lsp.renamer")()
-  end, opts("NvRenamer"))
+  end, "NvRenamer", { buffer = bufnr })
 
-  map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts("Code action"))
-  map("n", "gr", vim.lsp.buf.references, opts("Show references"))
+  map.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, "Code action", { buffer = bufnr })
+  map.set("n", "gr", vim.lsp.buf.references, "Show references", { buffer = bufnr })
 
   -- setup signature popup
   if client.server_capabilities.signatureHelpProvider then

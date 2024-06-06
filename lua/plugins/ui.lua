@@ -33,11 +33,11 @@ return {
       vim.notify = require("notify")
     end,
     config = function()
-      local map = vim.keymap.set
+      local map = require("libs.keybinds")
 
-      map("n", "<leader>H", function()
+      map.set("n", "<leader>H", function()
         require("notify").dismiss({ silent = true, pending = true })
-      end, { desc = "Dismiss notifications" })
+      end, "Dismiss notifications")
     end,
   },
   -- better vim.ui

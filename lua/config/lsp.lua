@@ -1,63 +1,58 @@
 local configs = require("libs.lsp.configs")
-local lspconfig = require("lspconfig")
-
-local on_attach = configs.on_attach
-local on_init = configs.on_init
-local capabilities = configs.capabilities
 
 --- Holds LSP servers which doesn't require extensive configurations
 ---@type string[]
 local servers = {
   -- C, C++
-  "clangd",
+  clangd = {},
   -- CMake
-  "cmake", -- "cmake-language-server"
+  cmake = {}, -- "cmake-language-server"
   -- CSS
-  "cssls", -- "css-lsp"
-  "css_variables", -- "css-variables-language-server"
-  "tailwindcss", -- "tailwindcss-language-server"
+  cssls = {}, -- "css-lsp"
+  css_variables = {}, -- "css-variables-language-server"
+  tailwindcss = {}, -- "tailwindcss-language-server"
   -- Docker, Docker compose
-  "dockerls", -- "dockerfile-language-server"
-  "docker_compose_language_service", -- "docker-compose-language-service"
+  dockerls = {}, -- "dockerfile-language-server"
+  docker_compose_language_service = {}, -- "docker-compose-language-service"
   -- Go
-  "gopls",
+  gopls = {},
   -- HTML
-  "html", -- "html-lsp"
+  html = {}, -- "html-lsp"
   -- Javascript, typescript
-  "tsserver", -- "typescript-language-server"
+  tsserver = {}, -- "typescript-language-server"
   -- JSON
-  "jsonls", -- "json-lsp"
+  jsonls = {}, -- "json-lsp"
   -- Lua
-  "lua_ls", -- "lua-language-server"
+  lua_ls = {}, -- "lua-language-server"
   -- Markdown
-  "marksman",
+  marksman = {},
   -- Python
-  "ruff_lsp", -- Use "ruff" for formatting/linting
+  ruff_lsp = {}, -- Use "ruff" for formatting/linting
   -- Rust
-  "rust_analyzer",
+  rust_analyzer = {},
   -- Shells :: Bash
-  "bashls", -- "bash-language-server"
+  bashls = {}, -- "bash-language-server"
   -- SQL
-  "sqls",
+  sqls = {},
   -- Svelte
-  "svelte", -- "svelte-language-server"
+  svelte = {}, -- "svelte-language-server"
   -- XML, SVG
-  "lemminx",
+  lemminx = {},
   -- Templ :: Mix of Go and HTML
-  "templ",
+  templ = {},
   -- LaTeX
-  "ltex", -- "ltex-ls"
-  "texlab",
+  ltex = {}, -- "ltex-ls"
+  texlab = {},
   -- Toml
-  "taplo",
+  taplo = {},
   -- Yaml
-  "yamlls", -- "yaml-language-server"
+  yamlls = {}, -- "yaml-language-server"
 }
 
-for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup({
-    on_init = on_init,
-    on_attach = on_attach,
-    capabilities = capabilities,
-  })
+for name, opts in pairs(servers) do
+  opts.on_init = configs.on_init
+  opts.on_attach = configs.on_attach
+  opts.capabilities = configs.capabilities
+
+  require("lspconfig")[name].setup(opts)
 end

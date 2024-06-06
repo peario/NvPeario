@@ -1,4 +1,4 @@
-local map = vim.keymap.set
+local map = require("libs.keybinds")
 
 local function apply(curr, win)
   local newName = vim.trim(vim.fn.getline("."))
@@ -32,10 +32,10 @@ return function()
   vim.cmd("normal A")
   vim.cmd("startinsert")
 
-  map({ "i", "n" }, "<Esc>", "<cmd>q<CR>", { buffer = 0 })
+  map.set({ "i", "n" }, "<Esc>", "<cmd>q<CR>", "", { buffer = 0 })
 
-  map({ "i", "n" }, "<CR>", function()
+  map.set({ "i", "n" }, "<CR>", function()
     apply(currName, win)
     vim.cmd.stopinsert()
-  end, { buffer = 0 })
+  end, "", { buffer = 0 })
 end

@@ -1,11 +1,13 @@
 -- Convenient way of storing all options without shorthand var assignments
 local options = {
   opt = {
+    showmode = false, -- Disable default statusline
+    lazyredraw = true, -- Screen will not be redrawn while executing macros, registers, etc.
     backup = false, -- Don't create backup files
     undofile = true, -- Track 'undo's between sessions
     undolevels = 10000,
     clipboard = "unnamedplus", -- Allows neovim to access the system clipboard
-    cmdheight = 1, -- More space in the neovim command line for displaying messages
+    cmdheight = 0, -- More space in the neovim command line for displaying messages
     completeopt = { "menu", "menuone", "noselect" },
     conceallevel = 0, -- So that `` is visible in markdown files
     fileencoding = "utf-8", -- The encoding used when writing to files
@@ -76,6 +78,8 @@ vim.filetype.add({
     ["[jt]sconfig.*.json"] = "jsonc",
   },
 })
+
+vim.o.statusline = "%!v:lua.require('libs.statusline')()"
 
 -- Iterate K-V table options above to assign values
 --  scope = g, o, opts, etc.

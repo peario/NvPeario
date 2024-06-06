@@ -14,20 +14,38 @@ return {
     cmd = "Telescope",
     init = function()
       local builtin = require("telescope.builtin")
-      local map = vim.keymap
+      local map = require("libs.keybinds")
 
       map.set(
         "n",
         "<leader>e",
         "<cmd>Telescope file_browser path=%:p:h select_buffer=true grouped=true hidden=true<CR>",
-        { desc = "File browser" }
+        "File browser"
       )
-      map.set("n", "<leader><space>", builtin.find_files, { desc = "Quick find" })
-      map.set("n", "<leader>q", builtin.live_grep, { desc = "Grep search" })
+      map.set("n", "<leader><space>", builtin.find_files, "Quick find")
+      map.set("n", "<leader>q", builtin.live_grep, "Grep search")
     end,
     opts = function()
       return {
         defaults = {
+          theme = "center",
+          initial_mode = "normal",
+          selection_strategy = "reset",
+          sorting_strategy = "ascending",
+          layout_strategy = "horizontal",
+          layout_config = {
+            horizontal = {
+              prompt_position = "top",
+              preview_width = 0.55,
+              results_width = 0.8,
+            },
+            vertical = {
+              mirror = false,
+            },
+            width = 0.87,
+            height = 0.80,
+            preview_cutoff = 120,
+          },
           vimgrep_arguments = {
             "rg",
             "--follow", -- Follow symbolic links
@@ -48,10 +66,23 @@ return {
             "--glob=!**/yarn.lock",
             "--glob=!**/package-lock.json",
           },
-          previewer = true,
+          file_sorter = require("telescope.sorters").get_fuzzy_file,
+          file_ignore_patterns = { "node_modules" },
+          generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
+          path_display = { "truncate" },
+          winblend = 0,
+          border = {},
+          borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+          color_devicons = true,
+          set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
           file_previewer = require("telescope.previewers").vim_buffer_cat.new,
           grep_previewer = require("telescope.previewers").vim_buffer_vimgrep.new,
           qflist_previewer = require("telescope.previewers").vim_buffer_qflist.new,
+          -- Developer configurations: Not meant for general override
+          buffer_previewer_maker = require("telescope.previewers").buffer_previewer_maker,
+          mappings = {
+            n = { ["q"] = require("telescope.actions").close },
+          },
         },
         pickers = {
           find_files = {
@@ -121,7 +152,9 @@ return {
   -- Set `vim.ui.select` to telescope
   { "nvim-telescope/telescope-ui-select.nvim" },
   -- Icons
-  { "nvim-tree/nvim-web-devicons" },
+  { "nvim-tree/nvim-web-devicons", lazy = true },
+  -- UI components
+  { "MunifTanjim/nui.nvim", lazy = true },
   -- Harpoon - bookmark files/tabs
   {
     "ThePrimeagen/harpoon",
@@ -158,16 +191,16 @@ return {
       end
 
       -- Keymaps
-      local map = vim.keymap
+      local map = require("libs.keybinds")
       map.set("n", "<leader>a", function()
         harpoon:list():add()
-      end, { desc = "Add to harpoon" })
+      end, "Add to harpoon")
       map.set("n", "<leader>A", function()
         harpoon:list():remove()
-      end, { desc = "Remove from harpoon" })
+      end, "Remove from harpoon")
       map.set("n", "<C-e>", function()
         toggle_telescope(harpoon:list())
-      end, { desc = "Toggle harpoon menu" })
+      end, "Toggle harpoon menu")
 
       map.set("n", "<C-h>", function()
         harpoon:list():select(1)

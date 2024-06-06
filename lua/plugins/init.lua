@@ -1,7 +1,5 @@
 --- Holds core plugins which improves the general nvim experience
 return {
-  -- Mappings UI
-  { "folke/which-key.nvim" },
   -- Manage global or project-local settings
   {
     "folke/neoconf.nvim",
@@ -24,4 +22,23 @@ return {
   },
   -- A collection of useful libs
   { "nvim-lua/plenary.nvim" },
+  -- Mappings UI
+  {
+    "folke/which-key.nvim",
+    keys = { "<leader>", "<c-r>", "<c-w>", '"', "'", "`", "c", "v", "g" },
+    cmd = "WhichKey",
+    event = "VeryLazy",
+    key_labels = {
+      ["<space>"] = "SPC",
+      ["<cr>"] = "RET",
+      ["<tab>"] = "TAB",
+    },
+    init = function()
+      vim.o.timeout = true
+      vim.o.timeoutlen = 300
+    end,
+    config = function(_, opts)
+      require("which-key").setup(opts)
+    end,
+  },
 }
